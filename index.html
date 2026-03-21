@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feliz Día de las Flores Amarillas - Una Experiencia Cósmica</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="loader">
+        <div class="spinner"></div>
+        <p>Invocando el universo floral...</p>
+    </div>
+
+    <canvas id="experience-canvas"></canvas>
+
+    <div id="ui-container">
+        <div id="message-display">
+            <h1 id="message-text"></h1>
+            <p id="instruction">Toca la burbuja de cristal para ver el secreto...</p>
+        </div>
+        
+        <!-- Audio Control Button -->
+        <div id="audio-control" title="Alternar música (M)">
+            <span id="audio-icon">🎵</span>
+        </div>
+    </div>
+
+    <div id="scroll-overlay">
+        <div id="scroll-content"></div>
+    </div>
+
+    <div id="custom-cursor"></div>
+    <div id="cursor-trail"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="main.js"></script>
+    
+    <!-- Audio Controls -->
+    <script>
+        // Keyboard controls
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'm' || e.key === 'M') {
+                if (window.toggleMusic) {
+                    window.toggleMusic();
+                }
+            }
+        });
+        
+        // Audio control button
+        document.addEventListener('DOMContentLoaded', () => {
+            const audioControl = document.getElementById('audio-control');
+            const audioIcon = document.getElementById('audio-icon');
+            
+            if (audioControl) {
+                audioControl.addEventListener('click', () => {
+                    if (window.toggleMusic) {
+                        window.toggleMusic();
+                        updateAudioIcon();
+                    }
+                });
+            }
+            
+            function updateAudioIcon() {
+                if (window.isAudioPlaying) {
+                    audioIcon.textContent = '🔇';
+                    audioControl.style.background = 'rgba(255, 215, 0, 0.2)';
+                } else {
+                    audioIcon.textContent = '🎵';
+                    audioControl.style.background = 'rgba(255, 215, 0, 0.1)';
+                }
+            }
+            
+            // Update icon when audio state changes
+            setInterval(updateAudioIcon, 1000);
+        });
+    </script>
+</body>
+</html>
