@@ -682,6 +682,14 @@ window.addEventListener('touchstart', (e) => {
     onClick();
 });
 
+window.addEventListener('touchmove', (e) => {
+    // Prevent default scrolling to allow internal navigation
+    if (e.cancelable) e.preventDefault();
+    
+    mouse.x = (e.touches[0].clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(e.touches[0].clientY / window.innerHeight) * 2 + 1;
+}, { passive: false });
+
 // Audio Support with Enhanced Controls
 let sound, audioLoader, listener, audioAnalyser, audioData;
 let isAudioPlaying = false;
@@ -826,8 +834,17 @@ function removeLoader() {
         }, 1000);
     }
     
-    // Start audio on first click/interaction due to browser policy
-    window.addEventListener('click', playMusic, { once: true });
+    // Start audio on first interaction due to browser policy
+    const startAudio = () => {
+        playMusic();
+        window.removeEventListener('click', startAudio);
+        window.removeEventListener('touchstart', startAudio);
+        window.removeEventListener('mousemove', startAudio);
+    };
+    
+    window.addEventListener('click', startAudio);
+    window.addEventListener('touchstart', startAudio);
+    window.addEventListener('mousemove', startAudio);
     
     // Start animation loop
     animate();
