@@ -620,27 +620,20 @@ function createPetalBurst(position) {
 function animate() {
     requestAnimationFrame(animate);
 
-    // Enhanced flower animations with individual properties
+    // Animate Flowers (Lluvia de Flores)
     flowers.forEach((flower, i) => {
         const userData = flower.userData;
-        const time = Date.now() * 0.001;
         
-        // Gentle floating movement
-        flower.position.y += Math.sin(time * userData.floatSpeed + userData.floatOffset) * 0.008;
+        // Falling movement
+        flower.position.y -= userData.fallSpeed;
+        flower.position.x += Math.sin(Date.now() * 0.001 + i) * 0.005;
         
-        // Subtle rotation
-        flower.rotation.z += userData.rotationSpeed;
+        // Rotation
+        flower.material.rotation += userData.rotationSpeed || 0.005;
         
-        // Gentle pulsing for main flowers
-        if (userData.isMain) {
-            const pulseScale = userData.originalScale * (1 + Math.sin(time * 0.5) * 0.05);
-            flower.scale.set(pulseScale, pulseScale, 1);
-        }
-        
-        // Depth-based opacity fade
-        if (userData.depthLayer > 0) {
-            const distanceFactor = 1 - (userData.depthLayer / CONFIG.parallaxLayers) * 0.3;
-            flower.material.opacity = Math.max(0.7, distanceFactor);
+        // Reset if goes off bottom
+        if (flower.position.y < -20) {
+            resetFlower(flower);
         }
     });
 
