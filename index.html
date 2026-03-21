@@ -25,21 +25,21 @@
             font-family: 'Outfit', sans-serif;
             background: #000;
             color: var(--text-white);
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh;
+            overflow-x: hidden;
+            overflow-y: auto;
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
+            padding: 20px;
         }
 
         /* Initial Black Background before open */
         #main-content {
-            position: fixed;
-            top: 0;
-            left: 0;
+            position: relative;
             width: 100%;
-            height: 100%;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -48,6 +48,7 @@
             visibility: hidden;
             transition: opacity 1.5s ease;
             background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+            z-index: 1;
         }
 
         #main-content.visible {
@@ -70,11 +71,14 @@
             align-items: center;
             transition: opacity 1s ease, visibility 1s ease;
             cursor: pointer;
+            text-align: center;
+            padding: 20px;
         }
 
         #entry-overlay.hidden {
             opacity: 0;
             visibility: hidden;
+            pointer-events: none;
         }
 
         .envelope {
@@ -111,7 +115,7 @@
 
         /* Ambient Background Background */
         .ambient-bg {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
@@ -124,7 +128,7 @@
 
         /* Flower Container */
         #flowers-container {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
@@ -150,11 +154,12 @@
 
         /* Petals falling effect */
         .petal {
-            position: absolute;
+            position: fixed;
+            top: -50px;
             background-repeat: no-repeat;
             background-size: contain;
             pointer-events: none;
-            z-index: 1;
+            z-index: 5;
             animation: fall linear infinite;
         }
 
@@ -168,10 +173,13 @@
         /* Message Container */
         .message-box {
             text-align: center;
-            max-width: 90%;
-            padding: 2.5rem;
+            width: 100%;
+            max-width: 800px;
+            padding: 3rem;
+            margin: 40px auto;
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-radius: 40px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
@@ -186,7 +194,7 @@
             line-height: 1.4;
             font-weight: 300;
             margin-bottom: 2rem;
-            min-height: 8rem;
+            min-height: 200px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -195,6 +203,7 @@
             color: var(--accent-yellow);
             text-shadow: 0 0 20px rgba(255, 223, 0, 0.3);
             white-space: pre-wrap;
+            word-wrap: break-word;
         }
 
         .sub-text {
@@ -210,6 +219,8 @@
             display: flex;
             gap: 15px;
             margin-top: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         #prev-btn, #next-btn {
@@ -226,6 +237,8 @@
             gap: 8px;
             letter-spacing: 1px;
             text-transform: uppercase;
+            min-width: 140px;
+            justify-content: center;
         }
 
         #prev-btn:hover, #next-btn:hover {
@@ -235,15 +248,11 @@
             box-shadow: 0 5px 15px rgba(255, 223, 0, 0.3);
         }
 
-        #prev-btn:active, #next-btn:active {
-            transform: translateY(0);
-        }
-
         #music-btn {
             position: fixed;
             bottom: 30px;
             right: 30px;
-            background: var(--glass-bg);
+            background: rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(255, 223, 0, 0.3);
             color: var(--accent-yellow);
             width: 50px;
@@ -259,24 +268,46 @@
             transition: all 0.3s ease;
         }
 
-        #music-btn:hover {
-            transform: scale(1.1);
-            background: rgba(255, 223, 0, 0.1);
-            box-shadow: 0 0 20px rgba(255, 223, 0, 0.2);
-        }
-
         /* Responsive Mobile */
         @media (max-width: 768px) {
+            body {
+                padding: 15px;
+                overflow-y: auto;
+            }
             .message-box {
-                padding: 2rem;
-                width: 90%;
+                padding: 1.5rem;
+                margin: 20px auto;
+                border-radius: 30px;
             }
             .message-text {
                 font-size: 1.5rem;
-                min-height: 10rem;
+                min-height: 250px;
             }
-            .flower {
-                width: 80px;
+            .nav-controls {
+                gap: 10px;
+                width: 100%;
+            }
+            #prev-btn, #next-btn {
+                flex: 1;
+                min-width: 120px;
+                font-size: 0.8rem;
+                padding: 0.7rem 1rem;
+            }
+            .envelope {
+                font-size: 4rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .message-text {
+                font-size: 1.3rem;
+            }
+            .nav-controls {
+                flex-direction: column;
+                width: 100%;
+            }
+            #prev-btn, #next-btn {
+                width: 100%;
             }
         }
     </style>
@@ -344,7 +375,6 @@
         const flowerImages = ['assets/sunflower.svg', 'assets/sunflower_small.svg'];
         const petalSVG = 'assets/petal.svg';
 
-        // Message Rotation Logic
         function changeMessage(direction = 1) {
             messageElement.style.opacity = 0;
             messageElement.style.transform = direction > 0 ? 'translateY(10px)' : 'translateY(-10px)';
@@ -358,14 +388,12 @@
             }, 1000);
         }
 
-        // Automatic interval (slower: 8 seconds)
         let messageInterval;
         
         function startInterval() {
             messageInterval = setInterval(() => changeMessage(1), 8000);
         }
 
-        // Manual Navigation
         nextBtn.addEventListener('click', () => {
             clearInterval(messageInterval);
             changeMessage(1);
@@ -378,7 +406,6 @@
             startInterval();
         });
 
-        // Music and Overlay Control
         let isPlaying = false;
         audio.volume = 0.3;
 
@@ -405,9 +432,8 @@
             isPlaying = !isPlaying;
         });
 
-        // Initialize flowers
         function createFlowers() {
-            const count = window.innerWidth < 768 ? 8 : 15;
+            const count = window.innerWidth < 768 ? 6 : 12;
             for (let i = 0; i < count; i++) {
                 const flower = document.createElement('img');
                 flower.src = flowerImages[Math.floor(Math.random() * flowerImages.length)];
@@ -418,8 +444,9 @@
                 flower.style.left = `${x}%`;
                 flower.style.top = `${y}%`;
                 
-                const size = 100 + Math.random() * 120;
+                const size = 60 + Math.random() * (window.innerWidth < 768 ? 60 : 100);
                 flower.style.width = `${size}px`;
+                
                 flower.style.animationDelay = `${Math.random() * 5}s`;
                 flower.style.animationDuration = `${10 + Math.random() * 15}s`;
                 
@@ -427,14 +454,13 @@
             }
         }
 
-        // Falling petals
         function createPetal() {
             const petal = document.createElement('div');
             petal.className = 'petal';
             petal.style.backgroundImage = `url(${petalSVG})`;
             
             const startX = Math.random() * window.innerWidth;
-            const size = 15 + Math.random() * 25;
+            const size = 15 + Math.random() * 20;
             const duration = 6 + Math.random() * 8;
             
             petal.style.left = `${startX}px`;
