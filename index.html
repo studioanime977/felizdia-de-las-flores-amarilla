@@ -3,91 +3,452 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feliz Día de las Flores Amarillas - Una Experiencia Cósmica</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;300;400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <title>Para una Persona Especial 🌼</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Dancing+Script:wght@700&display=swap');
+
+        :root {
+            --bg-color: #0c0c0c;
+            --accent-yellow: #ffdf00;
+            --soft-yellow: #fff4a3;
+            --text-white: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #000;
+            color: var(--text-white);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        /* Initial Black Background before open */
+        #main-content {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1.5s ease;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+        }
+
+        #main-content.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Overlay for Autoplay */
+        #entry-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s ease, visibility 1s ease;
+            cursor: pointer;
+        }
+
+        #entry-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .envelope {
+            font-size: 5rem;
+            animation: pulse 2s infinite;
+            filter: drop-shadow(0 0 20px var(--accent-yellow));
+        }
+
+        .open-btn {
+            margin-top: 2rem;
+            padding: 1rem 2rem;
+            background: transparent;
+            border: 2px solid var(--accent-yellow);
+            color: var(--accent-yellow);
+            border-radius: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .open-btn:hover {
+            background: var(--accent-yellow);
+            color: black;
+            box-shadow: 0 0 30px rgba(255, 223, 0, 0.5);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* Ambient Background Background */
+        .ambient-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(255, 223, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 223, 0, 0.1) 0%, transparent 50%);
+            z-index: -2;
+        }
+
+        /* Flower Container */
+        #flowers-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .flower {
+            position: absolute;
+            width: 120px;
+            height: auto;
+            opacity: 0.8;
+            filter: drop-shadow(0 0 15px rgba(255, 223, 0, 0.5));
+            animation: float 10s ease-in-out infinite alternate;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(15px, -20px) rotate(10deg); }
+            100% { transform: translate(-10px, 15px) rotate(-5deg); }
+        }
+
+        /* Petals falling effect */
+        .petal {
+            position: absolute;
+            background-repeat: no-repeat;
+            background-size: contain;
+            pointer-events: none;
+            z-index: 1;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Message Container */
+        .message-box {
+            text-align: center;
+            max-width: 90%;
+            padding: 2.5rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .message-text {
+            font-size: 2.2rem;
+            line-height: 1.4;
+            font-weight: 300;
+            margin-bottom: 2rem;
+            min-height: 8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1s ease-in-out, transform 1s ease;
+            font-family: 'Dancing Script', cursive;
+            color: var(--accent-yellow);
+            text-shadow: 0 0 20px rgba(255, 223, 0, 0.3);
+            white-space: pre-wrap;
+        }
+
+        .sub-text {
+            font-size: 0.9rem;
+            opacity: 0.6;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Controls */
+        .nav-controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 1rem;
+        }
+
+        #prev-btn, #next-btn {
+            background: rgba(255, 223, 0, 0.1);
+            border: 1px solid rgba(255, 223, 0, 0.4);
+            color: var(--accent-yellow);
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        #prev-btn:hover, #next-btn:hover {
+            background: var(--accent-yellow);
+            color: black;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 223, 0, 0.3);
+        }
+
+        #prev-btn:active, #next-btn:active {
+            transform: translateY(0);
+        }
+
+        #music-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--glass-bg);
+            border: 1px solid rgba(255, 223, 0, 0.3);
+            color: var(--accent-yellow);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            backdrop-filter: blur(5px);
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        #music-btn:hover {
+            transform: scale(1.1);
+            background: rgba(255, 223, 0, 0.1);
+            box-shadow: 0 0 20px rgba(255, 223, 0, 0.2);
+        }
+
+        /* Responsive Mobile */
+        @media (max-width: 768px) {
+            .message-box {
+                padding: 2rem;
+                width: 90%;
+            }
+            .message-text {
+                font-size: 1.5rem;
+                min-height: 10rem;
+            }
+            .flower {
+                width: 80px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div id="loader">
-        <div class="spinner"></div>
-        <p>Invocando el universo floral...</p>
+    <div id="entry-overlay">
+        <div class="envelope">💌</div>
+        <button class="open-btn">Abrir regalo</button>
+        <p style="margin-top: 1rem; opacity: 0.6; font-size: 0.9rem;">(Haz clic para entrar)</p>
     </div>
 
-    <!-- Pantalla de Inicio para sugerir interacción y activar audio -->
-    <div id="landing-overlay">
-        <div class="landing-card">
-            <div class="flower-icon">🌼</div>
-            <h1>Para Ti</h1>
-            <p>He preparado un pequeño universo de flores amarillas.</p>
-            <button id="start-button">Abrir Regalo</button>
-        </div>
-    </div>
-
-    <canvas id="experience-canvas"></canvas>
-
-    <div id="ui-container">
-        <div id="message-display">
-            <h1 id="message-text"></h1>
-            <p id="instruction">Toca la burbuja de cristal para ver el secreto...</p>
-        </div>
+    <div id="main-content">
+        <div class="ambient-bg"></div>
+        <div id="flowers-container"></div>
         
-        <!-- Audio Control Button -->
-        <div id="audio-control" title="Alternar música (M)">
-            <span id="audio-icon">🎵</span>
+        <div class="message-box">
+            <p class="message-text" id="romantic-message">Estas flores amarillas no son solo un detalle… son una forma de decirte que desde que llegaste a mi vida, todo se siente más bonito 💛🌼</p>
+            <p class="sub-text">Mensaje <span id="msg-index">1</span> de 11</p>
+            <div class="nav-controls">
+                <button id="prev-btn" title="Mensaje anterior">
+                    <span>❮</span> Anterior
+                </button>
+                <button id="next-btn" title="Siguiente mensaje">
+                    Siguiente <span>❯</span>
+                </button>
+            </div>
         </div>
+
+        <button id="music-btn" title="Reproducir/Pausar Música">
+            <span id="music-icon">⏸️</span>
+        </button>
     </div>
 
-    <div id="scroll-overlay">
-        <div id="scroll-content"></div>
-    </div>
+    <audio id="bg-music" loop>
+        <source src="QUIERO-DECIRTE.mp3" type="audio/mpeg">
+    </audio>
 
-    <div id="custom-cursor"></div>
-    <div id="cursor-trail"></div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="main.js"></script>
-    
-    <!-- Audio Controls -->
     <script>
-        // Keyboard controls
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'm' || e.key === 'M') {
-                if (window.toggleMusic) {
-                    window.toggleMusic();
-                }
-            }
-        });
+        const messages = [
+            "Estas flores amarillas no son solo un detalle… son una forma de decirte que desde que llegaste a mi vida, todo se siente más bonito 💛🌼",
+            "Hoy es el día de las flores amarillas, y no podía dejar pasar la oportunidad de darte algo que represente lo especial que eres para mí ✨",
+            "No sé exactamente en qué momento empezaste a importarme tanto, pero ahora sé que me encanta todo de ti 💛",
+            "Cada mensaje tuyo, cada momento, cada risa… poco a poco te has vuelto alguien muy importante en mi vida 🌼",
+            "Estas flores son solo un pequeño detalle, porque lo que realmente siento por ti es mucho más grande de lo que puedo explicar 💫",
+            "Me gusta la forma en la que eres, la tranquilidad que me das y lo bien que me siento cuando hablo contigo 💛",
+            "Si te doy flores amarillas hoy, no es solo por tradición… es porque realmente quiero seguir compartiendo momentos contigo 🌼",
+            "Contigo todo se siente más fácil, más bonito y más real… y eso no lo encuentro en cualquier persona ✨",
+            "No te prometo perfección, pero sí ganas reales de conocerte, de compartir y de hacerte sonreír 💛",
+            "Esto no es solo una página… es una forma de decirte que me importas más de lo que imaginas 🌼",
+            "Han aparecido las flores en la tierra; el tiempo de la canción ha venido… 🌼 (Cantares 2:12)\n\nY justo hoy, en medio de este día tan especial, apareces tú en mi vida de una forma que no esperaba, pero que me alegra mucho.\n\nNo sé en qué termine todo esto, pero sí sé que me gusta lo que estoy empezando a sentir por ti… y me encantaría seguir conociéndote 💛"
+        ];
+
+        let currentMessageIndex = 0;
+        const messageElement = document.getElementById('romantic-message');
+        const msgIndexSpan = document.getElementById('msg-index');
+        const flowersContainer = document.getElementById('flowers-container');
+        const musicBtn = document.getElementById('music-btn');
+        const musicIcon = document.getElementById('music-icon');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const audio = document.getElementById('bg-music');
+        const overlay = document.getElementById('entry-overlay');
+        const mainContent = document.getElementById('main-content');
+
+        const flowerImages = ['assets/sunflower.svg', 'assets/sunflower_small.svg'];
+        const petalSVG = 'assets/petal.svg';
+
+        // Message Rotation Logic
+        function changeMessage(direction = 1) {
+            messageElement.style.opacity = 0;
+            messageElement.style.transform = direction > 0 ? 'translateY(10px)' : 'translateY(-10px)';
+            
+            setTimeout(() => {
+                currentMessageIndex = (currentMessageIndex + direction + messages.length) % messages.length;
+                messageElement.textContent = messages[currentMessageIndex];
+                msgIndexSpan.textContent = currentMessageIndex + 1;
+                messageElement.style.opacity = 1;
+                messageElement.style.transform = 'translateY(0)';
+            }, 1000);
+        }
+
+        // Automatic interval (slower: 8 seconds)
+        let messageInterval;
         
-        // Audio control button
-        document.addEventListener('DOMContentLoaded', () => {
-            const audioControl = document.getElementById('audio-control');
-            const audioIcon = document.getElementById('audio-icon');
-            
-            if (audioControl) {
-                audioControl.addEventListener('click', () => {
-                    if (window.toggleMusic) {
-                        window.toggleMusic();
-                        updateAudioIcon();
-                    }
-                });
-            }
-            
-            function updateAudioIcon() {
-                if (window.isAudioPlaying) {
-                    audioIcon.textContent = '🔇';
-                    audioControl.style.background = 'rgba(255, 215, 0, 0.2)';
-                } else {
-                    audioIcon.textContent = '🎵';
-                    audioControl.style.background = 'rgba(255, 215, 0, 0.1)';
-                }
-            }
-            
-            // Update icon when audio state changes
-            setInterval(updateAudioIcon, 1000);
+        function startInterval() {
+            messageInterval = setInterval(() => changeMessage(1), 8000);
+        }
+
+        // Manual Navigation
+        nextBtn.addEventListener('click', () => {
+            clearInterval(messageInterval);
+            changeMessage(1);
+            startInterval();
         });
+
+        prevBtn.addEventListener('click', () => {
+            clearInterval(messageInterval);
+            changeMessage(-1);
+            startInterval();
+        });
+
+        // Music and Overlay Control
+        let isPlaying = false;
+        audio.volume = 0.3;
+
+        overlay.addEventListener('click', () => {
+            overlay.classList.add('hidden');
+            mainContent.classList.add('visible');
+            audio.play().catch(e => console.log('Autoplay error:', e));
+            isPlaying = true;
+            musicIcon.textContent = '⏸️';
+            startInterval();
+            createFlowers();
+            setInterval(createPetal, 450);
+        });
+
+        musicBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (isPlaying) {
+                audio.pause();
+                musicIcon.textContent = '🎵';
+            } else {
+                audio.play();
+                musicIcon.textContent = '⏸️';
+            }
+            isPlaying = !isPlaying;
+        });
+
+        // Initialize flowers
+        function createFlowers() {
+            const count = window.innerWidth < 768 ? 8 : 15;
+            for (let i = 0; i < count; i++) {
+                const flower = document.createElement('img');
+                flower.src = flowerImages[Math.floor(Math.random() * flowerImages.length)];
+                flower.className = 'flower';
+                
+                const x = Math.random() * 90;
+                const y = Math.random() * 90;
+                flower.style.left = `${x}%`;
+                flower.style.top = `${y}%`;
+                
+                const size = 100 + Math.random() * 120;
+                flower.style.width = `${size}px`;
+                flower.style.animationDelay = `${Math.random() * 5}s`;
+                flower.style.animationDuration = `${10 + Math.random() * 15}s`;
+                
+                flowersContainer.appendChild(flower);
+            }
+        }
+
+        // Falling petals
+        function createPetal() {
+            const petal = document.createElement('div');
+            petal.className = 'petal';
+            petal.style.backgroundImage = `url(${petalSVG})`;
+            
+            const startX = Math.random() * window.innerWidth;
+            const size = 15 + Math.random() * 25;
+            const duration = 6 + Math.random() * 8;
+            
+            petal.style.left = `${startX}px`;
+            petal.style.width = `${size}px`;
+            petal.style.height = `${size}px`;
+            petal.style.animationDuration = `${duration}s`;
+            petal.style.opacity = 0.6 + Math.random() * 0.4;
+            
+            document.body.appendChild(petal);
+            
+            setTimeout(() => {
+                petal.remove();
+            }, duration * 1000);
+        }
     </script>
 </body>
 </html>
