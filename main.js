@@ -817,28 +817,40 @@ window.onload = () => {
 };
 
 function removeLoader() {
-    console.log('🎬 Removing loader and starting animation...');
+    console.log('🎬 Showing landing page...');
     const loader = document.querySelector('#loader');
     if (loader) {
         loader.style.opacity = '0';
-        setTimeout(() => {
-            loader.remove();
-            console.log('✅ Loader removed successfully');
-        }, 1000);
+        setTimeout(() => loader.remove(), 1000);
     }
     
-    // Start audio on first interaction due to browser policy
-    const startAudio = () => {
-        playMusic();
-        window.removeEventListener('click', startAudio);
-        window.removeEventListener('touchstart', startAudio);
-        window.removeEventListener('mousemove', startAudio);
-    };
+    // Show landing overlay
+    const landing = document.querySelector('#landing-overlay');
+    if (landing) {
+        landing.style.display = 'flex';
+        landing.style.opacity = '1';
+        
+        document.querySelector('#start-button').addEventListener('click', startExperience);
+        document.querySelector('#start-button').addEventListener('touchstart', startExperience);
+    }
     
-    window.addEventListener('click', startAudio);
-    window.addEventListener('touchstart', startAudio);
-    window.addEventListener('mousemove', startAudio);
-    
-    // Start animation loop
+    // Start animation loop (but flowers won't fall until experienceStarted is true)
     animate();
+}
+
+window.experienceStarted = false;
+
+function startExperience() {
+    if (window.experienceStarted) return;
+    window.experienceStarted = true;
+    
+    console.log('❤️ Experience started!');
+    
+    // Start Music Immediately
+    playMusic();
+    
+    // Hide Landing
+    const landing = document.querySelector('#landing-overlay');
+    landing.style.opacity = '0';
+    setTimeout(() => landing.remove(), 1000);
 }
